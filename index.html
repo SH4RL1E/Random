@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:description" content="Created by Charlie with ☕">
+    <title>Siarli_0 Pages</title>
+    <style>
+        body {
+            background-color: black;
+            color: limegreen;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            height: 90vh;
+            padding: 1px;
+            overflow-y: hidden;
+        }
+        
+        #matrix-container {
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+        }
+        
+        #matrix {
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            max-width: 100%;
+            font-size: 10px;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+        
+        .red { color: red; }
+        .blue { color: #0061ff; }
+        .sky { color: skyblue; }
+    </style>
+</head>
+<body>
+    <div id="matrix-container">
+        <div id="matrix"></div>
+    </div>
+
+    <script>
+        const qwerty = [
+             "w", "e", "r", "t", "i", "o", 
+            "p", "a", "s", "d", "f", "g", "h", "v", "k",
+            "l", "c", "b", "n", "m", " ", 
+            '!', '$', '-', ',', 'y', '{', '}', "'", ')', 'C', 'D', 'F', 
+            'H', 'I', 'u', 'W', ':'
+        ];
+
+        const longText = "I'm $Charlie, a $Frontend {Developer} with a passion for working with command-line interfaces, and currently practicing backend development :)";
+        
+        const smallText = "Hello, World!!";
+
+        let animationSpeed = 0.0001;
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function colorize(text) {
+            return text
+                .replace(/\$Charlie/g, '<span class="red">$Charlie</span>')
+                .replace(/\$Frontend/g, '<span class="blue">$Frontend</span>')
+                .replace(/Developer/g, '<span class="sky">Developer</span>');
+        }
+
+        async function bfanimate(text, ms = animationSpeed) {
+            let i = 0;
+            let result = "";
+            const matrixDiv = document.getElementById('matrix');
+            
+            while (i < text.length) {
+                const char = qwerty[Math.floor(Math.random() * qwerty.length)];
+                let tempResult = result + char;
+                tempResult = colorize(tempResult);
+                matrixDiv.innerHTML = tempResult;
+
+                if (text[i] === char) {
+                    result += char;
+                    i++;
+                }
+
+                await delay(ms);
+            }
+
+            return result;
+        }
+
+        async function spamPrint(text, delayBetweenPrints = 200) {
+            const matrixDiv = document.getElementById('matrix');
+            const matrixContainer = document.getElementById('matrix-container');
+            let output = '';
+            const processingText = '<span class="red">##processing....</span>';
+            let spamCount = 0;
+
+            while (true) {
+                spamCount++;
+                await delay(100);
+
+                matrixDiv.innerHTML = output + '\n' + colorize(text) + processingText;
+                output += '\n' + colorize(text);
+                matrixContainer.scrollTop = matrixContainer.scrollHeight;
+
+                if (spamCount === 20) {
+                    window.location.href = 'https://siarli3-page.netlify.app/';
+                    break;
+                }
+
+                await delay(delayBetweenPrints);
+            }
+        }
+
+        async function main() {
+            await bfanimate(smallText);
+            await delay(1000);
+            await bfanimate(longText);
+            await delay(500);
+            await spamPrint(longText, 50);
+        }
+
+        main();
+    </script>
+</body>
+  </html>
+  
